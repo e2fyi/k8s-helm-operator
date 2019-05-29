@@ -358,7 +358,7 @@ func (c *Controller) submitHelmOperation(app *v1alpha1.HelmOperation) *v1alpha1.
 	}
 
 	// Try submitting the application by running spark-submit.
-	submitted, err := runSparkSubmit(newSubmission(submissionCmdArgs, app))
+	submitted, err := execHelmOperation(newSubmission(submissionCmdArgs, app))
 	if err != nil {
 		app.Status = v1alpha1.HelmOperationStatus{
 			OpState: v1alpha1.ApplicationState{
