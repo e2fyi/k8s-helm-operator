@@ -30,12 +30,37 @@ type Namespace string
 type Revision int64
 
 // Values describes the values to apply on the helm chart.
-type Values interface{}
+type Values interface {
+	DeepCopyValues() Values
+}
 
 // TLSSecret is .
 type TLSSecret struct {
 	Key string `json:"key,omitempty"`
 	Crt string `json:"crt,omitempty"`
+}
+
+// HelmOperationStateType describes the state of the HelmOperation.
+type OperationStateType string
+
+// Different type of states for a HelmOperation.
+const (
+	NewState              OperationStateType = ""
+	InvalidatingState     OperationStateType = "INVALIDATING"
+	SubmittedState        OperationStateType = "SUBMITTED"
+	FailedSubmissionState OperationStateType = "SUBMISSION_FAILED"
+	RunningState          OperationStateType = "RUNNING"
+	SucceedingState       OperationStateType = "SUCCEEDING"
+	CompletedState        OperationStateType = "COMPLETED"
+	FailingState          OperationStateType = "FAILING"
+	FailedState           OperationStateType = "FAILED"
+	UnknownState          OperationStateType = "UNKNOWN"
+)
+
+// ApplicationState tells the current state of the application and an error message in case of failures.
+type OperationState struct {
+	State        OperationStateType `json:"state"`
+	ErrorMessage string             `json:"errorMessage"`
 }
 
 // HelmOperationType describes the helm operation, i.e. install, upgrade, or
@@ -52,23 +77,38 @@ const (
 
 // HelmOperationStatus describes the current status of a helm operation.
 type HelmOperationStatus struct {
+	// OpState is the current state of the helm operation
+	OpState OperationState `json:"state,omitempty"`
 	// Message is the helm stdout message.
-	Message string `json: "message,omitempty"`
+	Message string `json:"message,omitempty"`
 	// Revision is the current revision of the helm release.
 	Revision int64 `json:"submissionID,omitempty"`
 	// CompletionTime is the time when the application runs to completion if it does.
 	TerminationTime metav1.Time `json:"terminationTime,omitempty"`
 }
 
+// RepoName describes the name of the helm repo to add or update.
+type RepoName string
+
+// RepoURL describes the URL of the helm repo to add or update.
+type RepoURL string
+
+// HelmRepoSpec describes the specifications for the helm repo to add or update.
+type HelmRepoSpec struct {
+	Name RepoName `json:"name"`
+	URL  RepoURL  `json:"url"`
+}
+
 // HelmOperationSpec describes the specifications to deploy, upgrade, or
 // rollback a helm chart.
 type HelmOperationSpec struct {
-	Chart     Chart     `json:"chart"`
-	Release   Release   `json:"release"`
-	Revision  Revision  `json:"revision,omitempty"`
-	Namespace Namespace `json:"namespace"`
-	Values    Values    `json:"values,omitempty"`
-	TLSSecret TLSSecret `json:"tls,omitempty"`
+	Chart     Chart        `json:"chart"`
+	Repo      HelmRepoSpec `json:"repo,omitempty"`
+	Release   Release      `json:"release"`
+	Revision  Revision     `json:"revision,omitempty"`
+	Namespace Namespace    `json:"namespace"`
+	Values    Values       `json:"values,omitempty"`
+	TLSSecret TLSSecret    `json:"tls,omitempty"`
 }
 
 // +genclient

@@ -3,14 +3,18 @@ module github.com/e2fyi/k8s-helm-operator
 go 1.12
 
 require (
+	github.com/GoogleCloudPlatform/spark-on-k8s-operator v0.0.0-20190520142540-09660409500e
 	github.com/gogo/protobuf v1.2.1 // indirect
+	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
+	github.com/google/uuid v1.0.0
+	github.com/prometheus/client_golang v0.9.3 // indirect
 	github.com/spf13/pflag v1.0.3 // indirect
 	golang.org/x/net v0.0.0-20190522155817-f3200d17e092 // indirect
 	golang.org/x/oauth2 v0.0.0-20190523182746-aaccbc9213b0 // indirect
 	golang.org/x/text v0.3.2 // indirect
-	golang.org/x/time v0.0.0-20190308202827-9d24e82272b4 // indirect
+	golang.org/x/time v0.0.0-20190308202827-9d24e82272b4
 	golang.org/x/tools v0.0.0-20190528151238-d238219cc233 // indirect
-	k8s.io/api v0.0.0-20190528154508-67ef80593b24 // indirect
+	k8s.io/api v0.0.0-20190528154508-67ef80593b24
 	k8s.io/apimachinery v0.0.0-20190528154326-e59c2fb0a8e5
 	k8s.io/client-go v11.0.0+incompatible
 	k8s.io/code-generator v0.0.0-20190511023357-639c964206c2
